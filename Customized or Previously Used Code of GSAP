@@ -1,0 +1,106 @@
+const d_w = window.innerWidth;
+  if(d_w > 991){
+    let h_d_w = d_w / 2;
+    $(function () {
+      /*
+           Dependencies : TweenMax and Draggable
+           Test on touch device @ http://cloud.bassta.bg/before-after.html
+           */
+      let navBtn = $('.kontakt_btn');
+      let navBtnOffset = navBtn.offset().left;
+      let $dragMe = $("#dragme");
+      let $beforeAfter = $("#before-after");
+      let $viewAfter = $("#view-after");
+      if ($("#dragme").length == 0)
+        return;
+      Draggable.create($dragMe, {
+        type: "left",
+        bounds: $beforeAfter,
+        onDrag: updateImages,
+        onDragEnd: ResetPosition
+      });
+
+      //Intro Animation
+      /*
+      setTimeout(function(){
+          animateTo(0 , 1);
+          setTimeout(function(){
+            animateTo(h_d_w , 1.5);
+          },1100);
+      },350);
+      */
+      $(window).resize(function () {
+        let windowWidth = $(window).width(),
+            h_d_w = windowWidth / 2;
+        animateTo(h_d_w , 1);
+      });
+      function updateImages() {
+        let logo = $('.a-p-logo-img').offset().left,
+            drag = $('#dragme').offset().left;
+        if (drag < logo){
+          document.querySelector('.a-p-logo .a-p-logo-img').src = "https://uploads-ssl.webflow.com/6278ec4a7575491f3650c65c/63bd3f375c5b0746a3bce193_Apple%20Pie%20Logo%20orange(2).png";
+          document.querySelector('.a-p-logo .a-p-logo-img').srcset = "https://uploads-ssl.webflow.com/6278ec4a7575491f3650c65c/63bd3f375c5b0746a3bce193_Apple%20Pie%20Logo%20orange(2).png";
+        }
+        else{
+          document.querySelector('.a-p-logo .a-p-logo-img').src = "https://uploads-ssl.webflow.com/6278ec4a7575491f3650c65c/63bd3f37744e4dd7cc80c4e5_Apple%20Pie%20Logo%20white(1).png";
+          document.querySelector('.a-p-logo .a-p-logo-img').srcset = "https://uploads-ssl.webflow.com/6278ec4a7575491f3650c65c/63bd3f37744e4dd7cc80c4e5_Apple%20Pie%20Logo%20white(1).png";
+        }
+        if(drag < navBtnOffset){
+          $(navBtn).css({
+            "background-color": "#ff6347"
+          })
+        }
+        else{
+          $(navBtn).css({
+            "background-color": "#403d55"
+          })
+        }
+        TweenLite.set($viewAfter, {width: $dragMe.css("left")});		//or this.x if only dragging
+      }
+
+      function animateTo(_left, value) {
+        TweenLite.to($dragMe, value, {left: _left, onUpdate: updateImages});
+      }
+
+      function ResetPosition(){
+        //TweenLite.to($dragMe, 1, {left: h_d_w, onUpdate: updateImages,yoyo: true});
+        TweenMax.to($dragMe, 1.5, {left: h_d_w, onUpdate: updateImages , ease:Elastic.easeOut, yoyo:true});
+      }
+      //V2 Click added
+      //$beforeAfter.on("click", function (event) {
+      //  let eventLeft = event.clientX - $beforeAfter.offset().left;
+       // animateTo(eventLeft , 1);
+     // });
+     });
+     /*
+     const observingElement = document.querySelector(".s-m-inner");
+     const menuItems = document.querySelectorAll(".main-nav-items");
+
+     const resizeObserver = new ResizeObserver((entries) => {
+       for (const entry of entries) {
+        menuItems.forEach(function(e){
+          let menuItemRight = Math.round(e.getBoundingClientRect().left);
+          let observerRight = Math.round(entry.target.offsetLeft);
+          if(observerRight <= menuItemRight){
+            e.querySelector('.menu-item-btn').classList.add("sliding-nav-open");
+          }
+          else{
+            e.querySelector('.menu-item-btn').classList.remove("sliding-nav-open");
+          }
+        });
+       }
+     });
+
+    resizeObserver.observe(observingElement);
+    */
+       options = {
+        "cursorOuter": "circle-basic",
+        "hoverEffect": "circle-move",
+        "hoverItemMove": false,
+        "defaultCursor": false,
+        "outerWidth": 30,
+        "outerHeight": 30
+        };
+      magicMouse(options);
+	}
+});
